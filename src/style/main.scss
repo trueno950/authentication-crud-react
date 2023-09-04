@@ -1,0 +1,30 @@
+@import '_colors.scss';
+@import '_fonts.scss';
+@import 'global.scss';
+@import 'form.scss';
+
+html,
+body {
+  font-family: 'Roboto';
+  margin: 0;
+  color: #706E6B;
+  height: 100%;
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(161, 157, 157) #FAFAFA;
+  }
+
+  *::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #FAFAFA;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: rgb(161, 157, 157);
+    border-radius: 20px;
+  }
+}

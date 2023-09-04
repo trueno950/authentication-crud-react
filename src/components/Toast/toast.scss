@@ -1,0 +1,84 @@
+.toast {
+  box-sizing: border-box;
+  position: fixed;
+  z-index: 999999;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 5px;
+  font-size: 14px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  padding: 15px 25px;
+  box-shadow: 0px 3px 3px rgb(0 0 0 / 20%);
+}
+
+.success {
+ background-color: rgb(212 237 218);
+ color: #28A745;
+}
+
+.failed {
+   background-color: rgb(248 214 218);
+   color: #DC3545;
+}
+
+.top-right {
+  top: 12px;
+  right: 12px;
+  transition: transform .6s ease-in-out;
+  animation: toast-in-right .7s;
+}
+
+.bottom-right {
+  bottom: 12px;
+  right: 12px;
+  transition: transform .6s ease-in-out;
+  animation: toast-in-right .7s;
+}
+
+.top-left {
+  top: 12px;
+  left: 12px;
+  transition: transform .6s ease-in;
+  animation: toast-in-left .7s;
+}
+
+.bottom-left {
+  bottom: 12px;
+  left: 12px;
+  transition: transform .6s ease-in;
+  animation: toast-in-left .7s;
+}
+
+.toast-close {
+  position: relative;
+  top: -5px;
+  right: -10px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.toast p {
+  max-width: 300px;
+}
+
+@keyframes toast-in-right {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes toast-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}

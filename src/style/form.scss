@@ -1,0 +1,18 @@
+.form-group {
+  padding: 5px 3px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-flex-center {
+  display: flex;
+  align-items: center;
+}
+
+.form-error-message {
+  color: red;
+  font-size: 13px;
+}

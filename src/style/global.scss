@@ -1,0 +1,117 @@
+.cards-list {
+  margin: 5px auto 25px auto;
+  display: grid;
+  gap: 1rem;
+
+}
+
+.card-item {
+  border-color: #10A8E4 !important;
+}
+
+.pointer {
+  cursor: pointer;
+}
+.card-title-size {
+  font-size: 20px;
+}
+
+.card-title-modules-size {
+  font-size: 14px;
+}
+
+.color-text-blue {
+  color: #10A8E4;
+}
+
+.color-text-black {
+  color: #000000;
+}
+
+@media screen and (min-width: 700px) {
+  .cards-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .cards-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+
+@media screen and (min-width: 1500px) {
+  .cards-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-link {
+  cursor: pointer;
+  text-align: center;
+  text-decoration: underline;
+}
+
+.background-danger {
+  background-color: #FF0000 !important;
+}
+
+.background-primary {
+  background-color: #51A451 !important;
+}
+
+.router-private-height {
+  min-height: calc(100vh - 110px);
+}
+
+.content-height {
+  min-height: calc(100vh - 170px);
+}
+
+.align-right {
+  margin-left: auto;
+}
+
+//text colors
+.text-status-active, .text-status-created, .text-status-validatation {
+  color: #1E2C7D;
+  font-weight: bold;
+}
+
+.text-status-refunded, .text-status-inactive {
+  color: #9b9b9b;
+  font-weight: bold;
+}
+
+.text-status-done, .text-status-paid, .text-status-completed, .text-status-redeemed {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.text-status-rejected, .text-status-unpaid, .text-status-deleted, .text-status-cancelled {
+  color: #f44336;
+  font-weight: bold;
+}
+
+.text-status-in-progress, .text-status-pending, .text-status-documentation_pending {
+  color: #FFD300;
+  font-weight: bold;
+}
+
+.text-status-partially-refunded {
+  color: #484848;
+  font-weight: bold;
+}
+
+.react-datepicker__close-icon {
+  top: -3px !important;
+}

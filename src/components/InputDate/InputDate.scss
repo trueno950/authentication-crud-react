@@ -1,0 +1,48 @@
+.input {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 7.5px 8px;
+  margin: 3px 0px 5px 0px;
+  gap: 10px;
+  width: -webkit-fill-available;
+  height: 30px;
+  background: #FFFFFF;
+  border: 1px solid #DDDBDA;
+  border-radius: 4px;
+  font-style: normal;
+  font-size: 14px;
+
+  &.input-small {
+    font-size: 12px;
+  }
+
+  &.input-medium {
+    font-size: 14px;
+  }
+
+  &.input-large {
+    font-size: 16px;
+  }
+}
+
+.input-date {
+  .react-datepicker-wrapper {
+    width: 100%;
+
+    .react-datepicker__input-container {
+      width: 100%;
+
+      input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: inherit;
+        line-height: inherit;
+        color: inherit;
+      }
+    }
+  }
+}

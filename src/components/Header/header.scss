@@ -1,0 +1,25 @@
+.header {
+  height: 60px;
+
+  .header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      >span {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .header-icons {
+        cursor: pointer;
+      }
+    }
+  }
+}

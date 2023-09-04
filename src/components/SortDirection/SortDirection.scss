@@ -1,0 +1,43 @@
+.sort-direction {
+  transition: background-color 0.3s;
+
+  .sort-text {
+    margin-right: 4px;
+    font-size: 14px;
+    font-weight: 300;
+    color: #000000;
+    text-align: start;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    transition: color 0.3s;
+  }
+
+  &.ASC {
+    svg {
+      color: #0000ff; // Color para dirección ascendente
+    }
+  }
+
+  &.DESC {
+    svg {
+      color: #ff0000; // Color para dirección descendente
+    }
+  }
+}
+
+button {
+  padding: 7.5px 8px;
+  margin: 3px 0px 5px 0px;
+  border-radius: 4px !important;
+  height: 30px;
+}
+
+button:hover {
+  background-color: #1E2C7D !important;
+  span{
+    color: #FFFFFF !important;
+  }
+}

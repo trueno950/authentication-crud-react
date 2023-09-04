@@ -1,0 +1,28 @@
+.select {
+  margin: 3px 0px 5px 0px;
+  padding: 0 5px;
+  width: -webkit-fill-available;
+  height: 30px;
+  background: #FFFFFF;
+  border: 1px solid #1E2C7D;
+  border-radius: 4px;
+  font-style: normal;
+  font-size: 14px;
+}
+
+.select-small {
+  font-size: 12px;
+}
+
+.select-medium {
+  font-size: 14px;
+}
+
+.select-large {
+  font-size: 16px;
+}
+
+select:disabled {
+  background: #dddddd;
+  color: #9f9f9f;
+}

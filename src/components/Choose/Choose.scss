@@ -1,0 +1,25 @@
+.choose {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.choose-option {
+  padding: 8px 16px;
+  margin: 4px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  font-size: 16px;
+  background-color: #f0f0f0;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.choose-option.selected {
+  background-color: #706868;
+  color: #fff;
+}
+
+.choose-option:hover {
+  background-color: #dcdcdc;
+}

@@ -1,0 +1,25 @@
+.loader-container {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  align-items: center;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner {
+  width: 35px;
+  height: 35px;
+  border: 5px solid #DEDEDE;
+  border-top: 5px solid #A8A8A8;
+  border-radius: 50%;
+  animation: spinner 1.5s linear infinite;
+}
