@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react'
 import { Button, Modal } from '@/components'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { logout, thunkLogout } from '@/store/auth/thunks'
-import { logoutUser, thunkGetMe } from '@/store/user/thunks'
+import { logoutUser, thunkGetUser } from '@/store/user/thunks'
 
 export const Header = () => {
   const dispatch = useAppDispatch()
-  const { user } = useAppSelector(store => store.me)
+  const { user } = useAppSelector(store => store.user)
   const { token_info } = useAppSelector(store => store.auth)
 
   const [showConfirm, setShowConfirm] = useState(false)
@@ -24,7 +24,7 @@ export const Header = () => {
   }
 
   useEffect(() => {
-    dispatch(thunkGetMe({ userId: String(token_info?.user.id) }))
+    dispatch(thunkGetUser({ userId: String(token_info?.user.id) }))
   }, [dispatch, token_info?.user.id])
 
   return (

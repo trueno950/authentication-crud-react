@@ -4,13 +4,11 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
 import authReducer from '@/store/auth/authSlice'
 import toastReducer from '@/store/toast/toastSlice'
-import meReducer from '@/store/user/meSlice'
 import userReducer from '@/store/user/userSlice'
 
 export const reducers = {
   auth: authReducer,
   toast: toastReducer,
-  me: meReducer,
   user: userReducer,
 }
 

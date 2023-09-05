@@ -66,6 +66,7 @@ export const LoginPage = () => {
 
   const formSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(formValues);
     dispatch(thunkLogin({ params: formValues }))
       .unwrap()
       .catch(() => {
@@ -123,7 +124,9 @@ export const LoginPage = () => {
                   La contraseña debe tener al menos:{" "}
                 </span>
                 <br />
-                <span className="form-error-message">Una longitud de 8 caracteres.</span>
+                <span className="form-error-message">
+                  Una longitud de 8 caracteres.
+                </span>
                 <br />
                 <span className="form-error-message">
                   Una letra mayúscula (A-Z).

@@ -1,14 +1,14 @@
-import './Dashboard.scss'
+import "./Dashboard.scss";
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
-import { Card } from '@/components'
-import { useAppSelector } from '@/store'
-import { dashboardItems } from '@/utils'
+import { Card } from "@/components";
+import { useAppSelector } from "@/store";
+import { dashboardItems } from "@/utils";
 
 export const DashboardPage = () => {
-  const { user } = useAppSelector(store => store.me)
-  const navigate = useNavigate()
+  const { user } = useAppSelector((store) => store.user);
+  const navigate = useNavigate();
 
   return (
     <div className="dashboard content-height">
@@ -25,20 +25,22 @@ export const DashboardPage = () => {
                   className={`card-item pointer`}
                   onClick={() =>
                     navigate(`/${card.path}`, {
-                      state: { type: user.role, typeId: user.id }
+                      state: { type: user.role, typeId: user.id },
                     })
                   }
                 >
                   <div className="dashboard-item-title">
-                    <span className="card-title-size color-text-blue">{card.title}</span>
+                    <span className="card-title-size color-text-blue">
+                      {card.title}
+                    </span>
                   </div>
                   <p>{card.description}</p>
                 </Card>
-              ) : null
+              ) : null;
             })}
           </div>
         </div>
       )}
     </div>
-  )
-}
+  );
+};

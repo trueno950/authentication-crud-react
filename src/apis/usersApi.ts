@@ -16,22 +16,3 @@ export const apiCreateUser = (requestBody: CreateUserInfo) => {
     headers: { 'content-type': 'application/json' }
   })
 }
-
-export const apiUpdateUser = (user: Partial<CommonUserInterface>, userId: string) => {
-  return apis.patch(`${VITE_API_BASE_URL}/users/${userId}`, user, {
-    headers: { 'content-type': 'application/json' }
-  })
-}
-
-export const apiDeleteAccount = (userId: string) => {
-  return apis.delete(`${VITE_API_BASE_URL}/users/${userId}`, {
-    headers: { 'content-type': 'application/json' }
-  })
-}
-
-export const apiGetUsers = (params?: ParametersFilters) => {
-  return apis.get(`${VITE_API_BASE_URL}/users`, {
-    headers: { 'content-type': 'application/json' },
-    params
-  })
-}
