@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { InitialStateUsers, UserInterface } from "@/interfaces";
+import { InitialStateUsers } from "@/interfaces";
 
-import { logoutUser, thunkGetUser } from "./thunks";
+import { thunkGetUser } from "./thunks";
 
 const getInitialState = (): InitialStateUsers => {
   return {
@@ -32,10 +32,6 @@ export const userSlice = createSlice({
         error_description:
           "Ha ocurrido un error al obtener la información del usuario",
       };
-    });
-
-    builder.addCase(logoutUser, (state) => {
-      state.user = <UserInterface>{};
     });
   },
 });

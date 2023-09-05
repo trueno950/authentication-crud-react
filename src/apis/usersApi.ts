@@ -1,4 +1,4 @@
-import { CommonUserInterface, CreateUserInfo, ParametersFilters } from '@/interfaces'
+import { CreateUserInfo } from '@/interfaces'
 import { getEnvironment } from '@/utils'
 
 import apis from './index'

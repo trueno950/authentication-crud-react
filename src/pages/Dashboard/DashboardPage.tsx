@@ -13,7 +13,7 @@ export const DashboardPage = () => {
   return (
     <div className="dashboard content-height">
       <div className="dashboard-title">
-        <b>¡Te damos la bienvenida a tu cuenta Vale Pay!</b>
+        <b>¡Te damos la bienvenida a tu cuenta!</b>
       </div>
       {user && Object.keys(user).length > 0 && (
         <div className={`dashboard-content`}>

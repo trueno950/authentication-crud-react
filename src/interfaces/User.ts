@@ -4,7 +4,7 @@ export interface CommonUserInterface {
   email?: string;
   firstName: string;
   lastName: string;
-  apartmentNumber: string;
+  apartmentNumber: number;
   role: string;
 }
 

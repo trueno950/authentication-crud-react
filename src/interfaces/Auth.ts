@@ -2,7 +2,7 @@ import { ErrorType, UserInterface } from "@/interfaces";
 
 export interface AuthInfoInterface {
   access_token: string;
-  user: UserInterface
+  user?: UserInterface
 }
 
 export interface ParamsLoginInterface {

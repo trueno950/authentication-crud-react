@@ -14,14 +14,14 @@ import {
   validate_letters_and_numbers,
   validate_only_letters,
   validate_password,
-  validate_phone_number,
+  validate_number,
 } from "@/utils";
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
-  const { creatingUser } = useAppSelector((store) => store.user);
+  const { creatingUser } = useAppSelector((store) => store.auth);
 
   const [validateName, setValidateName] = useState({
     firstName: false,
@@ -82,9 +82,8 @@ export const RegisterPage = () => {
       });
     } else if (Object.keys(validateApartmentNumber).includes(target.name)) {
       setValidateApartmentNumber({
-        message: validate_phone_number(target.value),
-        apartmentNumber:
-          validate_phone_number(target.value) === "" ? false : true,
+        message: validate_number(target.value),
+        apartmentNumber: validate_number(target.value) === "" ? false : true,
       });
     } else if (Object.keys(validateEmail).includes(target.name)) {
       setValidateEmail({
@@ -128,8 +127,25 @@ export const RegisterPage = () => {
 
   const formSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(thunkRegisterUser({ user: { ...formValues } }))
+    dispatch(
+      thunkRegisterUser({
+        user: {
+          ...formValues,
+          apartmentNumber: parseInt(formValues.apartmentNumber),
+        },
+      })
+    )
       .unwrap()
+      .then(() => {
+        dispatch(
+          thunkShowToast({
+            show: true,
+            type: "success",
+            description: "Usuario registrado con éxito",
+          })
+        );
+        navigate("/login");
+      })
       .catch(() => {
         dispatch(
           thunkShowToast({

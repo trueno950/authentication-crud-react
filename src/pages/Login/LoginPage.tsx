@@ -66,7 +66,6 @@ export const LoginPage = () => {
 
   const formSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formValues);
     dispatch(thunkLogin({ params: formValues }))
       .unwrap()
       .catch(() => {

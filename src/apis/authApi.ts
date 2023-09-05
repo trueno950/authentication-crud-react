@@ -1,5 +1,5 @@
 import { CreateUserInfo, ParamsLoginInterface } from "@/interfaces";
-import { getEnvironment, getToken } from "@/utils";
+import { getEnvironment } from "@/utils";
 
 import apis from "./index";
 
@@ -12,15 +12,7 @@ export const apiCreateUser = (requestBody: CreateUserInfo) => {
 };
 
 export const apiLogin = (params: ParamsLoginInterface) => {
-  console.log("params", params, VITE_API_BASE_URL);
   return apis.post(`${VITE_API_BASE_URL}/auth/login`, params);
-};
-
-export const apiLogout = () => {
-  const token = getToken();
-  return apis.post(`${VITE_API_BASE_URL}/logout`, {
-    refresh_token: token.refresh_token,
-  });
 };
 
 export const apiRecoverPassword = (email: string) => {

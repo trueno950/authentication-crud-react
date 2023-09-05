@@ -1,4 +1,4 @@
-import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { apiGetUser } from "@/apis/usersApi";
 import { UserInterface } from "@/interfaces";
@@ -17,5 +17,3 @@ export const thunkGetUser = createAsyncThunk<UserInterface, { userId: string }>(
     }
   }
 );
-
-export const logoutUser = createAction("me/logout");

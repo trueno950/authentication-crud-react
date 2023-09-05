@@ -4,7 +4,6 @@ import {
   apiChangePassword,
   apiCreateUser,
   apiLogin,
-  apiLogout,
   apiRecoverPassword,
 } from "@/apis/authApi";
 import {
@@ -39,7 +38,6 @@ export const thunkLogin = createAsyncThunk<
   { rejectValue: ValidationErrorsInterface }
 >("auth/login", async (props, { rejectWithValue }) => {
   const { params } = props;
-  console.log("params", params);
   try {
     const { data } = await apiLogin(params);
     return {
@@ -51,19 +49,6 @@ export const thunkLogin = createAsyncThunk<
     return rejectWithValue(result);
   }
 });
-
-export const thunkLogout = createAsyncThunk<AuthInfoInterface>(
-  "auth/thunkLogout",
-  async (_props, { rejectWithValue }) => {
-    try {
-      const { data } = await apiLogout();
-      return data.data;
-    } catch (err) {
-      const result = parseErrorAxios(err);
-      return rejectWithValue(result);
-    }
-  }
-);
 
 export const thunkRecoverPassword = createAsyncThunk<
   boolean | SerializedError,

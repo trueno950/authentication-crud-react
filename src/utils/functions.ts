@@ -149,6 +149,25 @@ export const validate_phone_number = (phoneNumber: string) => {
   return "";
 };
 
+export const validate_number = (number: string) => {
+  const trimmedNumber = number.trim(); // Eliminar espacios en blanco al inicio y al final
+
+  if (trimmedNumber.length === 0) {
+    return "Ingrese un número válido sin espacios en blanco.";
+  }
+
+  if (trimmedNumber.length > 10) {
+    return `El número debe tener un máximo de ${10} caracteres.`;
+  }
+
+  const regex = /^\d+$/;
+  if (!regex.test(trimmedNumber)) {
+    return "Ingrese un número válido sin espacios en blanco.";
+  }
+
+  return "";
+};
+
 export const getDate = (date: string | undefined) => {
   if (date) return new Date(date).toLocaleDateString("es");
   else return new Date().toLocaleDateString("es");

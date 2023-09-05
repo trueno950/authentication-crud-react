@@ -1,43 +1,44 @@
-import './header.scss'
+import "./header.scss";
 
-import { useEffect, useState } from 'react'
-import { Button, Modal } from '@/components'
-import { useAppDispatch, useAppSelector } from '@/store'
-import { logout, thunkLogout } from '@/store/auth/thunks'
-import { logoutUser, thunkGetUser } from '@/store/user/thunks'
+import { useEffect, useState } from "react";
+import { Button, Modal } from "@/components";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { logout } from "@/store/auth/thunks";
+import { thunkGetUser } from "@/store/user/thunks";
+import {
+  RightFromBracketIcon,
+  XmarkIcon,
+} from "../../assets/icons";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
-  const dispatch = useAppDispatch()
-  const { user } = useAppSelector(store => store.user)
-  const { token_info } = useAppSelector(store => store.auth)
-
-  const [showConfirm, setShowConfirm] = useState(false)
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((store) => store.user);
+  const { token_info } = useAppSelector((store) => store.auth);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const onLogout = () => {
-    setShowConfirm(false)
-    dispatch(thunkLogout())
-      .unwrap()
-      .then(() => {
-        dispatch(logoutUser())
-        dispatch(logout())
-      })
-  }
+    setShowConfirm(false);
+    dispatch(logout())
+    navigate("/");
+  };
 
   useEffect(() => {
-    dispatch(thunkGetUser({ userId: String(token_info?.user.id) }))
-  }, [dispatch, token_info?.user.id])
+    dispatch(thunkGetUser({ userId: String(token_info?.user?.id) }));
+  }, [dispatch, token_info?.user?.id]);
 
   return (
     <header className="header">
       <div className="header-wrapper">
+        <h3>Nextia Prueba</h3>
         {user?.firstName && (
           <div className="header-actions">
-            {/* <UserIcon
+            <RightFromBracketIcon
               width={25}
               className="header-icons"
-              onClick={() => areBooleanValuesValid && navigate('/profile')}
-            /> */}
-            {/* <RightFromBracketIcon width={25} className="header-icons" onClick={() => setShowConfirm(true)} /> */}
+              onClick={() => setShowConfirm(true)}
+            />
           </div>
         )}
       </div>
@@ -46,18 +47,28 @@ export const Header = () => {
           elementTitle={
             <div className="modal-title">
               <b>Cerrar sesión</b>
-              {/* <XmarkIcon
+              <XmarkIcon
                 className="modal-close-icon cursor-pointer"
                 width={10}
                 height={10}
                 onClick={() => setShowConfirm(false)}
-              /> */}
+              />
             </div>
           }
           elementFooter={
             <div className="modal-footer">
-              <Button title="Cerrar sesión" format="primary" size="small" onClick={() => onLogout()}></Button>
-              <Button title="Cancelar" format="outline" size="small" onClick={() => setShowConfirm(false)}></Button>
+              <Button
+                title="Cerrar sesión"
+                format="primary"
+                size="small"
+                onClick={() => onLogout()}
+              ></Button>
+              <Button
+                title="Cancelar"
+                format="outline"
+                size="small"
+                onClick={() => setShowConfirm(false)}
+              ></Button>
             </div>
           }
         >
@@ -67,5 +78,5 @@ export const Header = () => {
         </Modal>
       )}
     </header>
-  )
-}
+  );
+};
