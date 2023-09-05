@@ -82,9 +82,6 @@ export const LoginPage = () => {
 
   return (
     <div className="login">
-      <div className="title-welcome">
-        <h2>¡Te damos la bienvenida a Vale Pay!</h2>
-      </div>
       <Card className="login-content">
         <form className="form" onSubmit={formSubmit}>
           <div className="form-group">

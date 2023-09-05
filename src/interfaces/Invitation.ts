@@ -1,7 +1,7 @@
 import { ErrorType, UserInterface } from "@/interfaces";
 
 export interface CommonInvitationInterface {
-  guestName?: string;
+  guestName: string;
   entryDate: Date;
   expirationDate: Date;
   user: UserInterface;
@@ -22,5 +22,6 @@ export interface InitialStateInvitations {
 
   errorInvitations: ErrorType;
   loadingInvitations: boolean;
+  totalItems: number;
   invitations: InvitationInterface[] | undefined;
 }

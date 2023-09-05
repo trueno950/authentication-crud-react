@@ -22,64 +22,10 @@
 
     .invitations-actions {
       display: flex;
-      justify-content: center;
+      justify-content: end;
       gap: 2em;
       margin-bottom: 15px;
       width: 100%;
-
-      .sort-direction {
-        width: 70%;
-      }
-    }
-
-    @media screen and (max-width: 1200px) {
-      .sort-direction {
-        width: 60%;
-      }
-
-      .invitations-actions {
-        gap: 0.5em;
-      }
-
-      .input-search {
-        width: 15%;
-      }
-
-      .input-date {
-        width: 80%;
-      }
-
-      .small-width {
-        width: 80%;
-      }
-    }
-
-    @media screen and (max-width: 700px) {
-      .invitations-actions {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 0em;
-        margin-bottom: 15px;
-        width: 100%;
-      }
-
-      .sort-direction {
-        width: 100% !important;
-      }
-
-      .input-search {
-        width: 100%;
-      }
-
-      .input-date {
-        width: 100%;
-      }
-
-      .small-width {
-        width: 100%;
-      }
-
     }
 
     .invitations-card-actions {

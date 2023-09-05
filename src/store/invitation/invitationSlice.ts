@@ -16,6 +16,7 @@ const getInitialState = (): InitialStateInvitations => {
 
     errorInvitations: undefined,
     loadingInvitations: false,
+    totalItems: 0,
     invitations: [],
   };
 };
@@ -65,7 +66,8 @@ export const invitationSlice = createSlice({
     builder.addCase(thunkGetInvitations.fulfilled, (state, action) => {
       state.errorInvitations = undefined;
       state.loadingInvitations = false;
-      state.invitations = action.payload;
+      state.invitations = action.payload.invitations;
+      state.totalItems = action.payload.totalItems;
     });
     builder.addCase(thunkGetInvitations.rejected, (state) => {
       state.loadingInvitations = false;

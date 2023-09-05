@@ -16,6 +16,7 @@ export const apiGetInvitations = (
   userId: string,
   params?: ParametersFilters
 ) => {
+  console.log(userId, params);
   return apis.get(`${VITE_API_BASE_URL}/users/${userId}/invitations`, {
     headers: { "content-type": "application/json" },
     params,

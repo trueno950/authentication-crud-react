@@ -1,19 +1,20 @@
-import './invitations.scss'
+import "./invitations.scss";
 
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from "react";
 
-import { Loader } from '@/components'
-import { useAppDispatch, useAppSelector } from '@/store'
-import { thunkShowToast } from '@/store/toast/thunks'
-import { thunkGetInvitation } from '../../store/invitation/thunks'
+import { Loader } from "@/components";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { thunkShowToast } from "@/store/toast/thunks";
+import { thunkGetInvitation } from "../../store/invitation/thunks";
 
 interface Props {
-  invitationId: string
+  invitationId: string;
 }
 export const InvitationPage = ({ invitationId }: Props) => {
-  const dispatch = useAppDispatch()
-  const { user } = useAppSelector(store => store.user)
-  const { invitation, loadingInvitation } = useAppSelector(store => store.invitation)
+  const dispatch = useAppDispatch();
+  const { invitation, loadingInvitation } = useAppSelector(
+    (store) => store.invitation
+  );
 
   const get_info_invitation = useCallback(() => {
     if (invitationId) {
@@ -21,17 +22,18 @@ export const InvitationPage = ({ invitationId }: Props) => {
         dispatch(
           thunkShowToast({
             show: true,
-            type: 'failed',
-            description: 'Ha ocurrido un error al obtener la información del cupón'
+            type: "failed",
+            description:
+              "Ha ocurrido un error al obtener la información del cupón",
           })
-        )
-      })
+        );
+      });
     }
-  }, [invitationId, dispatch])
+  }, [invitationId, dispatch]);
 
   useEffect(() => {
-    get_info_invitation()
-  }, [get_info_invitation])
+    get_info_invitation();
+  }, [get_info_invitation]);
 
   return (
     <>
@@ -49,7 +51,19 @@ export const InvitationPage = ({ invitationId }: Props) => {
                     <h3>Datos de la invitación</h3>
                   </div>
                   <div className="invitations-details-item">
-                    <strong>Código:</strong> {invitation.guestName}
+                    <strong>Nombre del invitado:</strong> {invitation.guestName}
+                  </div>
+                  <div className="invitations-details-item">
+                    <strong>Fecha de entrada:</strong>{" "}
+                    {invitation.entryDate.toString()}
+                  </div>
+                  <div className="invitations-details-item">
+                    <strong>Fecha de expiración:</strong>{" "}
+                    {invitation.expirationDate.toString()}
+                  </div>
+                  <div className="invitations-details-item">
+                    <strong>Fecha de creación:</strong>{" "}
+                    {invitation.createdAt.toString()}
                   </div>
                 </div>
               </div>
@@ -58,5 +72,5 @@ export const InvitationPage = ({ invitationId }: Props) => {
         </div>
       )}
     </>
-  )
-}
+  );
+};

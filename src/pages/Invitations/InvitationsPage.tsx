@@ -1,84 +1,142 @@
 import "./invitations.scss";
 
 import { useEffect, useState } from "react";
+import DataTable, { TableColumn } from "react-data-table-component";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import { XmarkIcon } from "@/assets/icons";
-import {
-  Button,
-  Card,
-  InputSearch,
-  Loader,
-  Modal,
-  SortDirection,
-} from "@/components";
+import { InputSearch, Modal } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { thunkGetInvitations } from "@/store/invitation/thunks";
 import { thunkShowToast } from "@/store/toast/thunks";
 import { debounce } from "@/utils";
 
 import { InvitationPage } from "./InvitationPage";
+import { InvitationInterface } from "../../interfaces/Invitation";
 
 export const InvitationsPage = () => {
-  const [searchFilter, setSearchFilter] = useState({
-    searchCode: "",
-    searchShop: "",
-    searchTotal: "",
-    searchStatus: "",
-    searchDate: {
-      start: "",
-      end: "",
-    },
-    order: "DESC",
-  });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [invitationId, setCouponId] = useState("");
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
   const dispatch = useAppDispatch();
 
   const { user } = useAppSelector((store) => store.user);
-  const { loadingInvitations, invitations } = useAppSelector(
+  const { loadingInvitations, invitations, totalItems } = useAppSelector(
     (store) => store.invitation
+  );
+
+  const [searchFilter, setSearchFilter] = useState<string>("");
+  const [totalRows, setTotalRows] = useState<number>(0);
+  const [perPage, setPerPage] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [invitationId, setInvitationId] = useState<string | undefined>("");
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedRow, setSelectedRow] = useState<InvitationInterface | null>(
+    null
   );
 
   const onSearchChanged = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const search = debounce((a: string) => {
       setCurrentPage(1);
-      setSearchFilter({
-        ...searchFilter,
-        [target.name]: a,
-      });
+      setSearchFilter(a);
     });
     search(target.value);
   };
 
-  const handleDateChange = (start: Date | null, end: Date | null) => {
-    setStartDate(start);
-    setEndDate(end);
+  const columns: TableColumn<InvitationInterface>[] = [
+    {
+      name: "Nombre del invitado",
+      selector: (row) => row.guestName,
+      sortable: true,
+    },
+    {
+      name: "Fecha de entrada",
+      selector: (row) => row.entryDate.toString(),
+      sortable: false,
+    },
+    {
+      name: "Actions",
+      cell: (row) => (
+        <div>
+          <IconButton
+            aria-label="more"
+            aria-controls="long-menu"
+            aria-haspopup="true"
+            onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
+              handleClick(event, row)
+            }
+          >
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleEdit}>Edit</MenuItem>
+            <MenuItem onClick={handleDelete}>Delete</MenuItem>
+            <MenuItem onClick={handleMoreInfo}>More Info</MenuItem>
+          </Menu>
+        </div>
+      ),
+    },
+  ];
+
+  const handlePerRowsChange = (newPerPage: number, page: number) => {
+    setCurrentPage(page);
+    setPerPage(newPerPage);
   };
 
-  const handleDirectionChange = (direction: "ASC" | "DESC") => {
-    setSearchFilter({
-      ...searchFilter,
-      order: direction,
-    });
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleEdit = () => {
+    handleClose();
+  };
+
+  const handleDelete = () => {
+    handleClose();
+  };
+
+  const handleMoreInfo = () => {
+    setInvitationId(selectedRow?.id);
+    setShowConfirm(true);
+    handleClose();
+  };
+
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    row: InvitationInterface
+  ) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedRow(row);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setSelectedRow(null);
   };
 
   useEffect(() => {
-    if (!user || !user.role || user.role == "") return;
-    const userId = user.id
+    if (!user || !user.id) return;
+    const userId = user.id;
     const params = {
-      page: 1,
-      perPage: 10,
+      page: currentPage,
+      perPage: perPage,
       sort: "createdAt",
       order: "ASC",
       filter: "",
     };
-    dispatch(
-      thunkGetInvitations({ userId, params })
-    )
+    if (searchFilter) {
+      params.filter = searchFilter;
+    }
+    dispatch(thunkGetInvitations({ userId, params }))
       .unwrap()
+      .then(() => {
+        setTotalRows(totalItems);
+      })
       .catch(() => {
         dispatch(
           thunkShowToast({
@@ -88,27 +146,7 @@ export const InvitationsPage = () => {
           })
         );
       });
-  }, [dispatch, user, currentPage, searchFilter]);
-
-  useEffect(() => {
-    if (startDate != null && endDate != null) {
-      setSearchFilter({
-        ...searchFilter,
-        searchDate: {
-          start: startDate.toISOString().split("T")[0],
-          end: endDate.toISOString().split("T")[0],
-        },
-      });
-    } else if (startDate == null && endDate == null) {
-      setSearchFilter({
-        ...searchFilter,
-        searchDate: {
-          start: "",
-          end: "",
-        },
-      });
-    }
-  }, [startDate, endDate]);
+  }, [dispatch, user, searchFilter, perPage, currentPage, totalItems]);
 
   return (
     <div className="invitations content-height">
@@ -119,64 +157,26 @@ export const InvitationsPage = () => {
         <div className="invitations-actions">
           <InputSearch
             positionIconSearch="left"
-            placeholder="Buscar por el código"
+            placeholder="Buscar por el nombre de invitado"
             id="searchCode"
             name="searchCode"
             onChange={onSearchChanged}
           />
-          <InputSearch
-            positionIconSearch="left"
-            placeholder="Buscar por la tienda"
-            id="searchShop"
-            name="searchShop"
-            onChange={onSearchChanged}
-          />
-          <InputSearch
-            positionIconSearch="left"
-            placeholder="Buscar por el total"
-            id="searchTotal"
-            name="searchTotal"
-            onChange={onSearchChanged}
-          />
-          <SortDirection
-            defaultDirection="DESC"
-            labelAsc="Ordenar por fecha"
-            labelDesc="Ordenar por fecha"
-            onDirectionChange={handleDirectionChange}
-          />
         </div>
-        {loadingInvitations ? (
-          <Loader>
-            <span>Cargando invitaciones...</span>
-          </Loader>
-        ) : (
-          <div className="cards-list">
-            {invitations &&
-              invitations.length > 0 &&
-              invitations.map((invitation) => (
-                <Card
-                  key={invitation.id}
-                  className="card-item invitations-card-item"
-                >
-                  <p>
-                    <strong>Código: </strong>
-                    {invitation.guestName}
-                  </p>
-                  <div className="invitations-card-actions">
-                    <Button
-                      format="primary"
-                      title="Más info"
-                      onClick={() => [
-                        setShowConfirm(true),
-                        setCouponId(invitation.id),
-                      ]}
-                    />
-                  </div>
-                </Card>
-              ))}
-          </div>
+        {invitations && invitations.length > 0 && (
+          <DataTable
+            title="Listado de invitaciones"
+            columns={columns}
+            data={invitations ? invitations : []}
+            progressPending={loadingInvitations}
+            pagination
+            paginationServer
+            paginationTotalRows={totalRows}
+            onChangeRowsPerPage={handlePerRowsChange}
+            onChangePage={handlePageChange}
+          />
         )}
-        {showConfirm && (
+        {invitationId && showConfirm && (
           <Modal
             elementTitle={
               <div className="modal-title">

@@ -31,7 +31,7 @@ export const thunkGetInvitation = createAsyncThunk<
   try {
     const invitationId = props.invitationId;
     const { data } = await apiGetInvitation(invitationId);
-    return data;
+    return data.data;
   } catch (err) {
     const result = parseErrorAxios(err);
     throw rejectWithValue(result);
@@ -39,13 +39,13 @@ export const thunkGetInvitation = createAsyncThunk<
 });
 
 export const thunkGetInvitations = createAsyncThunk<
-  InvitationInterface[],
+  {invitations: InvitationInterface[], totalItems: number},
   { userId: string; params: ParametersFilters }
 >("invitation/getInvitations", async (props, { rejectWithValue }) => {
   try {
     const { userId, params } = props;
     const { data } = await apiGetInvitations(userId, params);
-    return data;
+    return data.data;
   } catch (err) {
     const result = parseErrorAxios(err);
     throw rejectWithValue(result);
