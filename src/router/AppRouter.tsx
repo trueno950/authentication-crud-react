@@ -1,20 +1,21 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from "react-router-dom";
 
-import { AxiosInterceptor, Footer, Toast } from '@/components'
-import { LoginPage } from '@/pages/Login'
-import { useAppDispatch, useAppSelector } from '@/store'
-import { thunkShowToast } from '@/store/toast/thunks'
+import { AxiosInterceptor, Footer, Toast } from "@/components";
+import { LoginPage } from "@/pages/Login";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { thunkShowToast } from "@/store/toast/thunks";
 
-import { NotFoundPage } from './NotFoundPage'
-import { PrivateRoute } from './PrivateRouter'
-import { PublicRoute } from './PublicRouter'
-import { ChangePassword, ForgotPassword } from '../pages/ForgotPassword'
-import { RegisterPage } from '../pages/Register'
-import { DashboardPage } from '../pages/Dashboard'
+import { NotFoundPage } from "./NotFoundPage";
+import { PrivateRoute } from "./PrivateRouter";
+import { PublicRoute } from "./PublicRouter";
+import { ChangePassword, ForgotPassword } from "@/pages/ForgotPassword";
+import { RegisterPage } from "@/pages/Register";
+import { DashboardPage } from "@/pages/Dashboard";
+import { InvitationsPage } from "@/pages/Invitations";
 
 export const AppRouter = () => {
-  const dispatch = useAppDispatch()
-  const { description, show, type } = useAppSelector(store => store.toast)
+  const dispatch = useAppDispatch();
+  const { description, show, type } = useAppSelector((store) => store.toast);
   return (
     <AxiosInterceptor>
       <>
@@ -60,6 +61,15 @@ export const AppRouter = () => {
               </PrivateRoute>
             }
           />
+
+          <Route
+            path="invitations"
+            element={
+              <PrivateRoute>
+                <InvitationsPage />
+              </PrivateRoute>
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <Footer />
@@ -67,10 +77,18 @@ export const AppRouter = () => {
           <Toast
             type={type}
             description={description}
-            callBack={() => dispatch(thunkShowToast({ show: false, type: 'success', description: '' }))}
+            callBack={() =>
+              dispatch(
+                thunkShowToast({
+                  show: false,
+                  type: "success",
+                  description: "",
+                })
+              )
+            }
           />
         )}
       </>
     </AxiosInterceptor>
-  )
-}
+  );
+};

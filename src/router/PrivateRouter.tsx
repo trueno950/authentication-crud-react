@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom'
 
-import { Header } from '../components'
+import { Header } from '@/components'
 import { PropsInterface } from '@/interfaces'
 import { useAppSelector } from '@/store'
 

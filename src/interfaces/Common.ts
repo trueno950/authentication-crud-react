@@ -7,14 +7,11 @@ export interface PagingInterface {
 }
 
 export interface ParametersFilters {
-  $skip?: number
-  $top?: number
-  $total?: boolean
-  $select?: string | Array<string>
-  $exclude?: Array<string>
-  $expand?: string | Array<string>
-  $order?: string | Array<string>
-  $filter?: unknown
+  page?: number;
+  perPage?: number;
+  sort?: string;
+  order?: 'ASC' | 'DESC' | string;
+  filter?: string;
 }
 
 export interface PropsInterface {

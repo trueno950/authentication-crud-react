@@ -8,7 +8,7 @@ import { thunkGetUser } from "@/store/user/thunks";
 import {
   RightFromBracketIcon,
   XmarkIcon,
-} from "../../assets/icons";
+} from "@/assets/icons";
 import { useNavigate } from "react-router-dom";
 
 export const Header = () => {

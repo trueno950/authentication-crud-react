@@ -3,7 +3,7 @@ export const getMaxItemsList = 10;
 export const dashboardItems = [
   {
     title: "Invitaciones",
-    path: "inivitations",
+    path: "invitations",
     description: "Posibilita la gestión de las invitaciones.",
     roles: ["admin", "user"],
   },
