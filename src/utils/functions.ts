@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import jwtDecode from "jwt-decode";
 
 export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(
@@ -186,4 +187,14 @@ export const isTokenExpired = (token: string): boolean => {
   } catch (error) {
     return true;
   }
+};
+
+export const formatDate = (row: string) =>
+  dayjs(row).format("DD/MM/YYYY HH:mm a");
+
+export const paginationComponentOptions = {
+  rowsPerPageText: "Filas por página",
+  rangeSeparatorText: "de",
+  selectAllRowsItem: true,
+  selectAllRowsItemText: "Todos",
 };

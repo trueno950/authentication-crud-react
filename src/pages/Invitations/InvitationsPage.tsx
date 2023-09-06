@@ -6,19 +6,22 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Link from "@mui/material/Link";
+import QRCode from "react-qr-code";
 
-import { XmarkIcon } from "@/assets/icons";
-import { Button, InputSearch, Modal } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/store";
 import {
   thunkDeleteInvitation,
   thunkGetInvitations,
 } from "@/store/invitation/thunks";
 import { thunkShowToast } from "@/store/toast/thunks";
-import { debounce } from "@/utils";
+import { debounce, formatDate, paginationComponentOptions } from "@/utils";
 
 import { InvitationPage } from "./InvitationPage";
 import { InvitationInterface } from "@/interfaces/Invitation";
+import { XmarkIcon } from "@/assets/icons";
+import { Button, InputSearch, Modal } from "@/components";
 
 export const InvitationsPage = () => {
   const dispatch = useAppDispatch();
@@ -35,6 +38,7 @@ export const InvitationsPage = () => {
   const [invitationId, setInvitationId] = useState<string | undefined>("");
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
   const [showDelete, setShowDelete] = useState<boolean>(false);
+  const [showQrCode, setShowQrCode] = useState<boolean>(false);
   const [reloadTable, setReloadTable] = useState<boolean>(true);
   const [isWrite, setIsWrite] = useState<boolean>(false);
   const [type, setType] = useState<string>("");
@@ -51,11 +55,11 @@ export const InvitationsPage = () => {
     },
     {
       name: "Fecha de entrada",
-      selector: (row) => row.entryDate.toString(),
-      sortable: false,
+      selector: (row) => formatDate(row.entryDate.toString()),
+      sortable: true,
     },
     {
-      name: "Actions",
+      name: "Acciones",
       cell: (row) => (
         <div>
           <IconButton
@@ -132,7 +136,10 @@ export const InvitationsPage = () => {
     handleClose();
   };
 
-  const handleGetQR = () => {};
+  const handleGetQR = () => {
+    setShowQrCode(true);
+    setAnchorEl(null);
+  };
 
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -220,7 +227,19 @@ export const InvitationsPage = () => {
   return (
     <div className="invitations content-height">
       <header className="invitations-header">
-        <div className="invitations-header-items"></div>
+        <Breadcrumbs aria-label="breadcrumb">
+          <Link underline="hover" color="inherit" href="/dashboard">
+            Inicio
+          </Link>
+          <Link
+            underline="hover"
+            color="text.primary"
+            href="/invitations"
+            aria-current="page"
+          >
+            Invitaciones
+          </Link>
+        </Breadcrumbs>
       </header>
       <div className="invitations-content">
         <div className="invitations-actions">
@@ -235,6 +254,7 @@ export const InvitationsPage = () => {
             title="Nueva invitación"
             format="primary"
             size="small"
+            id="new-invitation"
             onClick={() => {
               handleNew();
             }}
@@ -251,6 +271,7 @@ export const InvitationsPage = () => {
             paginationTotalRows={totalRows}
             onChangeRowsPerPage={handlePerRowsChange}
             onChangePage={handlePageChange}
+            paginationComponentOptions={paginationComponentOptions}
           />
         )}
         {showConfirm && (
@@ -309,6 +330,46 @@ export const InvitationsPage = () => {
         >
           <div className="modal-body">
             <span>¿Estás seguro de eliminar la invitación?</span>
+          </div>
+        </Modal>
+      )}
+      {showQrCode && (
+        <Modal
+          elementTitle={
+            <div className="modal-title">
+              <b>Información de la invitación</b>
+              <XmarkIcon
+                className="modal-close-icon cursor-pointer"
+                width={10}
+                height={10}
+                onClick={() => setShowQrCode(false)}
+              />
+            </div>
+          }
+        >
+          <div className="modal-body">
+            <div
+              style={{
+                height: "auto",
+                margin: "0 auto",
+                width: "100%",
+              }}
+            >
+              {selectedRow && (
+                <QRCode
+                  size={256}
+                  style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                  value={`Datos de la invitacion [Invitado: ${
+                    selectedRow?.guestName
+                  }, Fecha: ${formatDate(
+                    selectedRow?.entryDate.toString()
+                  )}, Fecha de caducidad: ${formatDate(
+                    selectedRow?.expirationDate.toString()
+                  )}]`}
+                  viewBox={`0 0 256 256`}
+                />
+              )}
+            </div>
           </div>
         </Modal>
       )}

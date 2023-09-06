@@ -179,7 +179,6 @@ export const InvitationPage = ({
                   onChange={onInputChanged}
                   disabled={!isWrite}
                   label="Nombre del invitado:"
-                  defaultValue="Joel May"
                 />
               </div>
               <div

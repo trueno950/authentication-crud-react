@@ -28,6 +28,32 @@
       width: 100%;
     }
 
+    @media (min-width: 768px) {
+      .input-search {
+        width: 30%;
+      }
+    }
+
+
+    @media (max-width: 768px) {
+      .input-search {
+        width: 50%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .invitations-actions {
+        display: contents;
+      }
+      .input-search {
+        width: 100%;
+      }
+
+      #new-invitation{
+        float: right;
+      }
+    }
+
     .invitations-card-actions {
       display: flex;
       justify-content: flex-end;
