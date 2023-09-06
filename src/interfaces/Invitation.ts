@@ -1,19 +1,24 @@
 import { ErrorType, UserInterface } from "@/interfaces";
+import { Dayjs } from "dayjs";
 
 export interface CommonInvitationInterface {
   guestName: string;
-  entryDate: Date;
-  expirationDate: Date;
-  user: UserInterface;
+  entryDate: string;
+  expirationDate: string;
+  userId: string;
 }
 
-export interface InvitationInterface extends CommonInvitationInterface {
-  createdAt: string;
-  id: string;
-  updatedAt: string;
+export interface InvitationInterface {
+  guestName: string;
+  entryDate: Dayjs;
+  expirationDate: Dayjs;
+  user?: UserInterface;
+  createdAt: Dayjs;
+  id?: string;
+  updatedAt: Dayjs;
 }
 
-export interface CreateInvitation extends InvitationInterface {}
+export interface CreateInvitation extends CommonInvitationInterface {}
 
 export interface InitialStateInvitations {
   errorInvitation: ErrorType;

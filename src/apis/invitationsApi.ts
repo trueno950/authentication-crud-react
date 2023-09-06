@@ -2,7 +2,7 @@ import { ParametersFilters } from "@/interfaces";
 import { getEnvironment } from "@/utils";
 
 import apis from "./index";
-import { CreateInvitation } from "../interfaces/Invitation";
+import { CreateInvitation } from "@/interfaces/Invitation";
 
 const { VITE_API_BASE_URL } = getEnvironment();
 
@@ -16,7 +16,6 @@ export const apiGetInvitations = (
   userId: string,
   params?: ParametersFilters
 ) => {
-  console.log(userId, params);
   return apis.get(`${VITE_API_BASE_URL}/users/${userId}/invitations`, {
     headers: { "content-type": "application/json" },
     params,

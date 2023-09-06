@@ -1,20 +1,129 @@
 import "./invitations.scss";
+import dayjs, { Dayjs } from "dayjs";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { Loader } from "@/components";
+import { Button, Loader } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { thunkShowToast } from "@/store/toast/thunks";
-import { thunkGetInvitation } from "../../store/invitation/thunks";
+import {
+  thunkCreateInvitation,
+  thunkGetInvitation,
+  thunkUpdateInvitation,
+} from "@/store/invitation/thunks";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import TextField from "@mui/material/TextField";
 
 interface Props {
-  invitationId: string;
+  invitationId: string | undefined;
+  type: string;
+  closeModal: () => void;
+  isWrite?: boolean;
 }
-export const InvitationPage = ({ invitationId }: Props) => {
+export const InvitationPage = ({
+  invitationId,
+  type,
+  closeModal,
+  isWrite,
+}: Props) => {
   const dispatch = useAppDispatch();
   const { invitation, loadingInvitation } = useAppSelector(
     (store) => store.invitation
   );
+
+  const { user } = useAppSelector((store) => store.user);
+
+  const [formValues, setFormValues] = useState<{
+    guestName: string;
+    entryDate: Dayjs;
+    expirationDate: Dayjs;
+    createdAt: Dayjs;
+  }>({
+    guestName: "",
+    entryDate: dayjs(new Date()),
+    expirationDate: dayjs(new Date()),
+    createdAt: dayjs(new Date()),
+  });
+
+  const onInputChanged = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    setFormValues({ ...formValues, [target.name]: target.value });
+  };
+
+  const handleDateChange = (date: Dayjs | null, field: string) => {
+    if (date) {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [field]: dayjs(date),
+      }));
+    }
+  };
+
+  const formSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const bodyInvitation = {
+      guestName: formValues.guestName,
+      entryDate: formValues.entryDate.format("YYYY-MM-DD HH:mm:ss"),
+      expirationDate: formValues.expirationDate.format("YYYY-MM-DD HH:mm:ss"),
+      userId: user?.id || "",
+    };
+
+    if (type === "new") {
+      dispatch(thunkCreateInvitation({ invitation: bodyInvitation }))
+        .unwrap()
+        .then(() => {
+          dispatch(
+            thunkShowToast({
+              show: true,
+              type: "success",
+              description: "Usuario creado con éxito",
+            })
+          );
+          closeModal();
+        })
+        .catch(() => {
+          dispatch(
+            thunkShowToast({
+              show: true,
+              type: "failed",
+              description:
+                "Ha ocurrido un error al intentar guardar la información",
+            })
+          );
+          closeModal();
+        });
+    } else {
+      dispatch(
+        thunkUpdateInvitation({
+          invitation: bodyInvitation,
+          invitationId: invitationId || "",
+        })
+      )
+        .unwrap()
+        .then(() => {
+          dispatch(
+            thunkShowToast({
+              show: true,
+              type: "success",
+              description: "Usuario actualizado con éxito",
+            })
+          );
+          closeModal();
+        })
+        .catch(() => {
+          dispatch(
+            thunkShowToast({
+              show: true,
+              type: "failed",
+              description:
+                "Ha ocurrido un error al intentar actualizar la información",
+            })
+          );
+          closeModal();
+        });
+    }
+  };
 
   const get_info_invitation = useCallback(() => {
     if (invitationId) {
@@ -24,7 +133,7 @@ export const InvitationPage = ({ invitationId }: Props) => {
             show: true,
             type: "failed",
             description:
-              "Ha ocurrido un error al obtener la información del cupón",
+              "Ha ocurrido un error al obtener la información de la invitación",
           })
         );
       });
@@ -35,40 +144,97 @@ export const InvitationPage = ({ invitationId }: Props) => {
     get_info_invitation();
   }, [get_info_invitation]);
 
+  useEffect(() => {
+    if (!invitation || type == "new") {
+      return;
+    }
+    setFormValues({
+      ...invitation,
+      entryDate: dayjs(invitation.entryDate),
+      expirationDate: dayjs(invitation.expirationDate),
+      createdAt: dayjs(invitation.createdAt),
+    });
+  }, [invitation]);
+
   return (
     <>
-      {loadingInvitation && <Loader>Cargando información del cupón</Loader>}
+      {loadingInvitation && (
+        <Loader>Espere por favor, procesando información...</Loader>
+      )}
       {!loadingInvitation && (
         <div className="invitations content-height">
           <header className="invitations-header-details">
-            <h2>Información de la invitación</h2>
+            <h2>
+              {type === "new" ? "Nueva invitación" : "Datos de la invitación"}
+            </h2>
           </header>
-          {invitation && (
-            <>
-              <div className="invitations-content-details">
-                <div className="invitations-details">
-                  <div className="invitations-title-details">
-                    <h3>Datos de la invitación</h3>
-                  </div>
-                  <div className="invitations-details-item">
-                    <strong>Nombre del invitado:</strong> {invitation.guestName}
-                  </div>
-                  <div className="invitations-details-item">
-                    <strong>Fecha de entrada:</strong>{" "}
-                    {invitation.entryDate.toString()}
-                  </div>
-                  <div className="invitations-details-item">
-                    <strong>Fecha de expiración:</strong>{" "}
-                    {invitation.expirationDate.toString()}
-                  </div>
-                  <div className="invitations-details-item">
-                    <strong>Fecha de creación:</strong>{" "}
-                    {invitation.createdAt.toString()}
-                  </div>
-                </div>
+          <div className="invitations-content-details">
+            <form className="form" onSubmit={formSubmit}>
+              <div className="form-name">
+                <TextField
+                  required
+                  id="guestName"
+                  name="guestName"
+                  value={formValues.guestName}
+                  onChange={onInputChanged}
+                  disabled={!isWrite}
+                  label="Nombre del invitado:"
+                  defaultValue="Joel May"
+                />
               </div>
-            </>
-          )}
+              <div
+                className={`form-dates ${type === "new" && "form-dates-new"}`}
+              >
+                <div className="form-group">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      format="DD/MM/YYYY hh:mm a"
+                      label="Fecha de entrada:"
+                      value={formValues.entryDate}
+                      disabled={!isWrite}
+                      onChange={(date) => handleDateChange(date, "entryDate")}
+                    />
+                  </LocalizationProvider>
+                </div>
+                <div className="form-group">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      format="DD/MM/YYYY hh:mm a"
+                      label="Fecha de expiración:"
+                      value={formValues.expirationDate}
+                      disabled={!isWrite}
+                      onChange={(date) =>
+                        handleDateChange(date, "expirationDate")
+                      }
+                    />
+                  </LocalizationProvider>
+                </div>
+                {type != "new" && (
+                  <div className="form-group">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DateTimePicker
+                        format="DD/MM/YYYY hh:mm a"
+                        label="Fecha de creación:"
+                        value={formValues.createdAt}
+                        disabled={!isWrite}
+                        onChange={(date) => handleDateChange(date, "createdAt")}
+                      />
+                    </LocalizationProvider>
+                  </div>
+                )}
+              </div>
+              {type != "view" && (
+                <div className="form-action">
+                  <Button
+                    title={
+                      type == "new" ? "Guardar invitación" : "Editar invitación"
+                    }
+                    format="primary"
+                  />
+                </div>
+              )}
+            </form>
+          </div>
         </div>
       )}
     </>

@@ -8,14 +8,14 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import { XmarkIcon } from "@/assets/icons";
-import { InputSearch, Modal } from "@/components";
+import { Button, InputSearch, Modal } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { thunkGetInvitations } from "@/store/invitation/thunks";
 import { thunkShowToast } from "@/store/toast/thunks";
 import { debounce } from "@/utils";
 
 import { InvitationPage } from "./InvitationPage";
-import { InvitationInterface } from "../../interfaces/Invitation";
+import { InvitationInterface } from "@/interfaces/Invitation";
 
 export const InvitationsPage = () => {
   const dispatch = useAppDispatch();
@@ -30,7 +30,10 @@ export const InvitationsPage = () => {
   const [perPage, setPerPage] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [invitationId, setInvitationId] = useState<string | undefined>("");
-  const [showConfirm, setShowConfirm] = useState(false);
+  const [showConfirm, setShowConfirm] = useState<boolean>(false);
+  const [reloadTable, setReloadTable] = useState<boolean>(true);
+  const [isWrite, setIsWrite] = useState<boolean>(false);
+  const [type, setType] = useState<string>("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedRow, setSelectedRow] = useState<InvitationInterface | null>(
     null
@@ -74,9 +77,10 @@ export const InvitationsPage = () => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleEdit}>Edit</MenuItem>
-            <MenuItem onClick={handleDelete}>Delete</MenuItem>
-            <MenuItem onClick={handleMoreInfo}>More Info</MenuItem>
+            <MenuItem onClick={handleEdit}>Editar</MenuItem>
+            <MenuItem onClick={handleGetQR}>Generar QR</MenuItem>
+            <MenuItem onClick={handleMoreInfo}>Más Información</MenuItem>
+            <MenuItem onClick={handleDelete}>Eliminar</MenuItem>
           </Menu>
         </div>
       ),
@@ -92,18 +96,38 @@ export const InvitationsPage = () => {
     setCurrentPage(page);
   };
 
+  const handleNew = () => {
+    setInvitationId("");
+    setIsWrite(true);
+    setType("new");
+    setShowConfirm(true);
+    setReloadTable(false);
+  };
+
   const handleEdit = () => {
+    setInvitationId(selectedRow?.id);
+    setIsWrite(true);
+    setType("edit");
+    setShowConfirm(true);
+    setReloadTable(false);
     handleClose();
   };
 
   const handleDelete = () => {
+    setReloadTable(false);
     handleClose();
   };
 
   const handleMoreInfo = () => {
     setInvitationId(selectedRow?.id);
+    setIsWrite(false);
+    setType("view");
     setShowConfirm(true);
     handleClose();
+  };
+
+  const handleGetQR = () => {
+    
   };
 
   const handleClick = (
@@ -119,14 +143,20 @@ export const InvitationsPage = () => {
     setSelectedRow(null);
   };
 
+  const closeModal = () => {
+    setShowConfirm(false);
+    setInvitationId("");
+    setReloadTable(true);
+  };
+
   useEffect(() => {
-    if (!user || !user.id) return;
-    const userId = user.id;
+    if (!user?.id || !reloadTable) return;
+    const userId = user?.id;
     const params = {
       page: currentPage,
       perPage: perPage,
       sort: "createdAt",
-      order: "ASC",
+      order: "DESC",
       filter: "",
     };
     if (searchFilter) {
@@ -146,7 +176,15 @@ export const InvitationsPage = () => {
           })
         );
       });
-  }, [dispatch, user, searchFilter, perPage, currentPage, totalItems]);
+  }, [
+    dispatch,
+    user,
+    searchFilter,
+    perPage,
+    currentPage,
+    totalItems,
+    reloadTable,
+  ]);
 
   return (
     <div className="invitations content-height">
@@ -162,6 +200,14 @@ export const InvitationsPage = () => {
             name="searchCode"
             onChange={onSearchChanged}
           />
+          <Button
+            title="Nueva invitación"
+            format="primary"
+            size="small"
+            onClick={() => {
+              handleNew();
+            }}
+          />
         </div>
         {invitations && invitations.length > 0 && (
           <DataTable
@@ -176,7 +222,7 @@ export const InvitationsPage = () => {
             onChangePage={handlePageChange}
           />
         )}
-        {invitationId && showConfirm && (
+        {showConfirm && (
           <Modal
             elementTitle={
               <div className="modal-title">
@@ -190,7 +236,12 @@ export const InvitationsPage = () => {
             }
           >
             <div className="modal-body">
-              <InvitationPage invitationId={invitationId} />
+              <InvitationPage
+                invitationId={invitationId}
+                type={type}
+                closeModal={closeModal}
+                isWrite={isWrite}
+              />
             </div>
           </Modal>
         )}

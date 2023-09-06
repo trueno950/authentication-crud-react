@@ -8,11 +8,11 @@ import {
   apiUpdateInvitation,
 } from "@/apis/invitationsApi";
 import { parseErrorAxios } from "@/utils";
-import { ParametersFilters } from "../../interfaces";
+import { ParametersFilters } from "@/interfaces";
 
 export const thunkCreateInvitation = createAsyncThunk<
   InvitationInterface,
-  { invitation: InvitationInterface }
+  { invitation: CreateInvitation }
 >("invitation/createInvitation", async (props, { rejectWithValue }) => {
   try {
     const { invitation } = props;

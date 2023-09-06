@@ -22,7 +22,7 @@
 
     .invitations-actions {
       display: flex;
-      justify-content: end;
+      justify-content: space-between;
       gap: 2em;
       margin-bottom: 15px;
       width: 100%;
@@ -39,40 +39,31 @@
   }
 
   .invitations-content-details {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-bottom: 2em;
+    margin-top: 1em;
 
-    .invitations-details {
-      justify-items: start;
-      display: grid;
+    .form {
+      display: block;
 
-      .invitations-details-item {
-        margin-bottom: 10px;
+      .form-name {
+        display: grid;
+        margin-bottom: 1.5em;
+      }
 
-        strong {
-          margin-right: 5px;
-        }
+      .form-dates {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto;
+        gap: 0.5em;
+      }
 
-        .status {
-          display: inline-block;
-          padding: 5px 10px;
-          border-radius: 4px;
-          font-weight: bold;
-        }
+      .form-dates-new {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
 
-        .redeemed,
-        .done {
-          background-color: #4caf50;
-          color: #fff;
-        }
-
-        .unredeemed,
-        .rejected {
-          background-color: #f44336;
-          color: #fff;
-        }
+      .form-action {
+        margin-top: 2em;
+        display: flex;
+        justify-content: end;
       }
     }
   }
@@ -80,48 +71,6 @@
   @media screen and (max-width: 550px) {
     .invitations-content-details {
       grid-template-columns: repeat(1, 1fr);
-    }
-  }
-
-  .payment-view {
-    .payment-cards {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 2em;
-
-      .payment-card {
-        background-color: #f5f5f5;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        width: 80%;
-
-        .payment-name {
-          font-size: 18px;
-          font-weight: bold;
-          margin-bottom: 5px;
-        }
-
-        .payment-prices {
-          font-size: 14px;
-          color: #888;
-          margin-bottom: 10px;
-        }
-
-        .payment-card-number,
-        .payment-description {
-          font-size: 14px;
-          margin-bottom: 5px;
-        }
-      }
-
-    }
-
-    @media screen and (max-width: 550px) {
-      .payment-cards {
-        grid-template-columns: repeat(1, 1fr);
-      }
     }
   }
 }
