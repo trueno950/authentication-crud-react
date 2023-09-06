@@ -10,7 +10,10 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { XmarkIcon } from "@/assets/icons";
 import { Button, InputSearch, Modal } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { thunkGetInvitations } from "@/store/invitation/thunks";
+import {
+  thunkDeleteInvitation,
+  thunkGetInvitations,
+} from "@/store/invitation/thunks";
 import { thunkShowToast } from "@/store/toast/thunks";
 import { debounce } from "@/utils";
 
@@ -31,6 +34,7 @@ export const InvitationsPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [invitationId, setInvitationId] = useState<string | undefined>("");
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
+  const [showDelete, setShowDelete] = useState<boolean>(false);
   const [reloadTable, setReloadTable] = useState<boolean>(true);
   const [isWrite, setIsWrite] = useState<boolean>(false);
   const [type, setType] = useState<string>("");
@@ -38,14 +42,6 @@ export const InvitationsPage = () => {
   const [selectedRow, setSelectedRow] = useState<InvitationInterface | null>(
     null
   );
-
-  const onSearchChanged = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    const search = debounce((a: string) => {
-      setCurrentPage(1);
-      setSearchFilter(a);
-    });
-    search(target.value);
-  };
 
   const columns: TableColumn<InvitationInterface>[] = [
     {
@@ -87,6 +83,14 @@ export const InvitationsPage = () => {
     },
   ];
 
+  const onSearchChanged = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    const search = debounce((a: string) => {
+      setCurrentPage(1);
+      setSearchFilter(a);
+    });
+    search(target.value);
+  };
+
   const handlePerRowsChange = (newPerPage: number, page: number) => {
     setCurrentPage(page);
     setPerPage(newPerPage);
@@ -114,7 +118,9 @@ export const InvitationsPage = () => {
   };
 
   const handleDelete = () => {
+    setInvitationId(selectedRow?.id);
     setReloadTable(false);
+    setShowDelete(true);
     handleClose();
   };
 
@@ -126,9 +132,7 @@ export const InvitationsPage = () => {
     handleClose();
   };
 
-  const handleGetQR = () => {
-    
-  };
+  const handleGetQR = () => {};
 
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -147,6 +151,33 @@ export const InvitationsPage = () => {
     setShowConfirm(false);
     setInvitationId("");
     setReloadTable(true);
+  };
+
+  const onDeleteInvitation = () => {
+    setShowDelete(false);
+    if (invitationId)
+      dispatch(thunkDeleteInvitation({ invitationId }))
+        .unwrap()
+        .then(() => {
+          dispatch(
+            thunkShowToast({
+              show: true,
+              type: "success",
+              description: "El usuario ha sido eliminado correctamente",
+            })
+          );
+          closeModal();
+        })
+        .catch(() => {
+          dispatch(
+            thunkShowToast({
+              show: true,
+              type: "failed",
+              description:
+                "Ha ocurrido un error al intentar eliminar la invitación",
+            })
+          );
+        });
   };
 
   useEffect(() => {
@@ -246,6 +277,41 @@ export const InvitationsPage = () => {
           </Modal>
         )}
       </div>
+      {showDelete && (
+        <Modal
+          elementTitle={
+            <div className="modal-title">
+              <b>Confirmación</b>
+              <XmarkIcon
+                className="modal-close-icon cursor-pointer"
+                width={10}
+                height={10}
+                onClick={() => setShowDelete(false)}
+              />
+            </div>
+          }
+          elementFooter={
+            <div className="modal-footer">
+              <Button
+                title="Si"
+                format="primary"
+                size="small"
+                onClick={() => onDeleteInvitation()}
+              ></Button>
+              <Button
+                title="No"
+                format="outline"
+                size="small"
+                onClick={() => setShowDelete(false)}
+              ></Button>
+            </div>
+          }
+        >
+          <div className="modal-body">
+            <span>¿Estás seguro de eliminar la invitación?</span>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };
