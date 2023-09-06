@@ -21,7 +21,7 @@ import { debounce, formatDate, paginationComponentOptions } from "@/utils";
 import { InvitationPage } from "./InvitationPage";
 import { InvitationInterface } from "@/interfaces/Invitation";
 import { XmarkIcon } from "@/assets/icons";
-import { Button, InputSearch, Modal } from "@/components";
+import { Button, InputSearch, Loader, Modal } from "@/components";
 
 export const InvitationsPage = () => {
   const dispatch = useAppDispatch();
@@ -274,30 +274,31 @@ export const InvitationsPage = () => {
             paginationComponentOptions={paginationComponentOptions}
           />
         )}
-        {showConfirm && (
-          <Modal
-            elementTitle={
-              <div className="modal-title">
-                <XmarkIcon
-                  className="modal-close-icon cursor-pointer"
-                  width={15}
-                  height={15}
-                  onClick={() => setShowConfirm(false)}
-                />
-              </div>
-            }
-          >
-            <div className="modal-body">
-              <InvitationPage
-                invitationId={invitationId}
-                type={type}
-                closeModal={closeModal}
-                isWrite={isWrite}
+        {loadingInvitations && <Loader>Espere por favor...</Loader>}
+      </div>
+      {showConfirm && (
+        <Modal
+          elementTitle={
+            <div className="modal-title">
+              <XmarkIcon
+                className="modal-close-icon cursor-pointer"
+                width={15}
+                height={15}
+                onClick={() => setShowConfirm(false)}
               />
             </div>
-          </Modal>
-        )}
-      </div>
+          }
+        >
+          <div className="modal-body">
+            <InvitationPage
+              invitationId={invitationId}
+              type={type}
+              closeModal={closeModal}
+              isWrite={isWrite}
+            />
+          </div>
+        </Modal>
+      )}
       {showDelete && (
         <Modal
           elementTitle={

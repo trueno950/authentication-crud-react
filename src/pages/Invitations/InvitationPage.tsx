@@ -1,5 +1,7 @@
 import "./invitations.scss";
 import dayjs, { Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 import { useCallback, useEffect, useState } from "react";
 
@@ -52,11 +54,18 @@ export const InvitationPage = ({
   };
 
   const handleDateChange = (date: Dayjs | null, field: string) => {
-    if (date) {
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [field]: dayjs(date),
-      }));
+    if (field === "entryDate" && date) {
+      setFormValues({ ...formValues, entryDate: dayjs(date) });
+      if (
+        formValues.expirationDate &&
+        date.isAfter(formValues.expirationDate)
+      ) {
+        setFormValues({ ...formValues, expirationDate: dayjs(date) });
+      }
+    } else if (field === "expirationDate" && date) {
+      if (!formValues.entryDate || date.isAfter(formValues.entryDate)) {
+        setFormValues({ ...formValues, expirationDate: dayjs(date) });
+      }
     }
   };
 
@@ -64,8 +73,10 @@ export const InvitationPage = ({
     e.preventDefault();
     const bodyInvitation = {
       guestName: formValues.guestName,
-      entryDate: formValues.entryDate.format("YYYY-MM-DD HH:mm:ss"),
-      expirationDate: formValues.expirationDate.format("YYYY-MM-DD HH:mm:ss"),
+      entryDate: formValues.entryDate.utc().format("YYYY-MM-DD HH:mm:ss"),
+      expirationDate: formValues.expirationDate
+        .utc()
+        .format("YYYY-MM-DD HH:mm:ss"),
       userId: user?.id || "",
     };
 
@@ -228,6 +239,7 @@ export const InvitationPage = ({
                     title={
                       type == "new" ? "Guardar invitación" : "Editar invitación"
                     }
+                    disabled={formValues.guestName === ""}
                     format="primary"
                   />
                 </div>

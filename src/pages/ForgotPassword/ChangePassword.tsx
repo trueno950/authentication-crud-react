@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Button, Input, Label } from "@/components";
-import { useAppDispatch } from "@/store";
+import { Button, Input, Label, Loader } from "@/components";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { thunkChangePassword } from "@/store/auth/thunks";
 import { thunkShowToast } from "@/store/toast/thunks";
 import { validate_password } from "@/utils";
@@ -14,6 +14,7 @@ import { validate_password } from "@/utils";
 export const ChangePassword = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { recoveringPassword } = useAppSelector((store) => store.auth);
   const { token } = useParams();
 
   const [formValues, setFormValues] = useState({
@@ -75,94 +76,97 @@ export const ChangePassword = () => {
       <div className="change-password-content">
         <div className="change-password-content-card">
           <h3 className="text-center">Recuperación de contraseña</h3>
-          <form className="change-password-form" onSubmit={formSubmit}>
-            <div className="form-group">
-              <Label labelText="Nueva contraseña * " />
-              <FontAwesomeIcon
-                icon={showPassword ? faEyeSlash : faEye}
-                className="password-toggle-icon"
-                onClick={() => setShowPassword(!showPassword)}
-              />
-              <Input
-                required
-                type={showPassword ? "text" : "password"}
-                id="password"
-                name="password"
-                value={formValues.password}
-                onChange={onElementChanged}
-              />
+          {!recoveringPassword && (
+            <form className="change-password-form" onSubmit={formSubmit}>
+              <div className="form-group">
+                <Label labelText="Nueva contraseña * " />
+                <FontAwesomeIcon
+                  icon={showPassword ? faEyeSlash : faEye}
+                  className="password-toggle-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+                <Input
+                  required
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  value={formValues.password}
+                  onChange={onElementChanged}
+                />
+                {validatePassword.password && (
+                  <>
+                    <span className="form-error-message">
+                      La contraseña debe tener al menos:{" "}
+                    </span>
+                    <br />
+                    <span className="form-error-message">
+                      Una longitud de 8 caracteres.
+                    </span>
+                    <br />
+                    <span className="form-error-message">
+                      Una letra mayúscula (A-Z).
+                    </span>
+                    <br />
+                    <span className="form-error-message">
+                      Una letra minúscula (a-z).
+                    </span>
+                    <br />
+                    <span className="form-error-message">
+                      Un carácter especial(!@#$%)
+                    </span>
+                    <br />
+                  </>
+                )}
+              </div>
+              <div className="form-group">
+                <Label labelText="Repita contraseña * " />
+                <FontAwesomeIcon
+                  icon={showPasswordConfirm ? faEyeSlash : faEye}
+                  className="password-toggle-icon"
+                  onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                />
+                <Input
+                  required
+                  type={showPasswordConfirm ? "text" : "password"}
+                  id="newPassword"
+                  name="newPassword"
+                  value={formValues.newPassword}
+                  onChange={onElementChanged}
+                />
+                {validatePassword.newPassword && (
+                  <span className="form-error-message">
+                    Por favor ingrese una contraseña válida
+                  </span>
+                )}
+              </div>
               {validatePassword.password && (
-                <>
-                  <span className="form-error-message">
-                    La contraseña debe tener al menos:{" "}
-                  </span>
-                  <br />
-                  <span className="form-error-message">
-                    Una longitud de 8 caracteres.
-                  </span>
-                  <br />
-                  <span className="form-error-message">
-                    Una letra mayúscula (A-Z).
-                  </span>
-                  <br />
-                  <span className="form-error-message">
-                    Una letra minúscula (a-z).
-                  </span>
-                  <br />
-                  <span className="form-error-message">
-                    Un carácter especial(!@#$%)
-                  </span>
-                  <br />
-                </>
-              )}
-            </div>
-            <div className="form-group">
-              <Label labelText="Repita contraseña * " />
-              <FontAwesomeIcon
-                icon={showPasswordConfirm ? faEyeSlash : faEye}
-                className="password-toggle-icon"
-                onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
-              />
-              <Input
-                required
-                type={showPasswordConfirm ? "text" : "password"}
-                id="newPassword"
-                name="newPassword"
-                value={formValues.newPassword}
-                onChange={onElementChanged}
-              />
-              {validatePassword.newPassword && (
                 <span className="form-error-message">
                   Por favor ingrese una contraseña válida
                 </span>
               )}
-            </div>
-            {validatePassword.password && (
-              <span className="form-error-message">
-                Por favor ingrese una contraseña válida
-              </span>
-            )}
-            {formValues.password !== formValues.newPassword &&
-              !validatePassword.password && (
-                <span className="form-error-message">
-                  Las constraseñas no coinciden
-                </span>
-              )}
-            <div className="change-password-actions">
-              <Button
-                type="submit"
-                title="Enviar"
-                format="primary"
-                disabled={
-                  validatePassword.password ||
-                  formValues.password === "" ||
-                  validatePassword.newPassword ||
-                  formValues.newPassword === "" ||
-                  formValues.password != formValues.newPassword
-                }
-              />
-            </div>
-          </form>
+              {formValues.password !== formValues.newPassword &&
+                !validatePassword.password && (
+                  <span className="form-error-message">
+                    Las constraseñas no coinciden
+                  </span>
+                )}
+              <div className="change-password-actions">
+                <Button
+                  type="submit"
+                  title="Enviar"
+                  format="primary"
+                  disabled={
+                    validatePassword.password ||
+                    formValues.password === "" ||
+                    validatePassword.newPassword ||
+                    formValues.newPassword === "" ||
+                    formValues.password != formValues.newPassword
+                  }
+                />
+              </div>
+            </form>
+          )}
+          {recoveringPassword && <Loader>Espere por favor...</Loader>}
         </div>
       </div>
     </div>
